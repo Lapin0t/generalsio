@@ -1,0 +1,133 @@
+\documentclass[11pt]{exam}
+\input{preambule.tex}
+
+
+%%% Indiquer ici le code de la fiche (Nom du langage + Numéro de la
+%%% fiche sur 3 digit)
+%%% Ex: Caml001, C001, C++001 
+\newcommand{\nf}{Py18?}
+
+\def\theexo{\Roman{exo}}
+\def\theaction{\theexo.\arabic{action}}
+
+\newcounter{exo} \newcounter{action}[exo] \setcounter{exo}{0}
+\def\theexo{\arabic{exo}}
+\def\theaction{\theexo.\arabic{action}}
+
+%\newcommand{\exonb}[1]{Exxeerrccicce \nf.\theexo.\arabic{exo} #1}
+
+\newenvironment{exo}[1]%
+{\refstepcounter{exo}
+\subsubsection*{Exercice \nf.\theexo #1}}%
+{}
+
+
+% \renewcommand\section{\subsubsection*}
+
+\sloppy
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title{Fiche Projet Python18e\\Un Général Mécanique}
+
+\author{Borthelle Peio\\
+\'Ecole Normale Supérieur de Lyon}
+\date{}
+\maketitle
+
+\section{Description de la fiche \nf}
+
+
+\begin{description}
+
+\item[Objectif:] Interagir avec un serveur avec asyncio, écrire une AI simple
+
+\item[Pré-requis:] [Donner les pré-requis] Python01 à Python17
+
+\item[Difficulté:] $\star~\star~\star~\star$
+
+\end{description}
+
+\section{Règles et mécaniques de jeu de \texttt{generals.io}}
+
+\texttt{generals.io} est un petit jeu de statégie en temps réel en ligne. Il se
+joue sur une grille 2D. Chaque case est soit vide, soit une montagne, soit un
+batiment. Le nombre de soldats sur chaque case est indiqué par un nombre et on
+peut 2 fois par tour bouger la totalité ou la moitié (sauf 1) des soldats d'une
+case sur une case adjacente. Lorsque l'on déplace des soldats sur une case
+ennemie, celui qui a le plus de soldats reste sur la case et on soustrait les
+deux quantitées de soldats.
+
+Chacun commence avec 0 soldats et son château, le but étant de capturer le
+château adverse en allant sur sa case avec plus de soldats que lui. Le
+château ainsi que les batiments capturés génèrent 1 soldat à chaque tour et
+tout les 25 tours, les cases normales où l'on a des soldats génèrent 1 soldat.
+Les batiments sont initialement neutres, mais ils ont un nombre entre 50 et 75
+indiqué: on doit donc déplacer dessus plus de soldats que le nombre indiqué
+pour le capturer.
+
+On peut également rajouter que les tours durent 1 seconde (on peut donc
+effectuer un déplacement toutes les demi-secondes si on clique assez vite).
+Différents modes de jeu existent: 1 contre 1 (\texttt{1v1}), à 8 tous contre
+tous (\texttt{ffa}) et 2 contre 2. Nous nous concentrons ici sur le mode 1v1.
+
+\begin{exo}{}
+
+Jouer quelques parties jusqu'à bien comprendre les mécaniques de jeu ainsi que
+les rudiments de statégie.
+
+\end{exo}
+
+\begin{solution}
+Un replay: \url{http://generals.io/replays/BqMJcee8g}.
+\end{solution}
+
+\section{Le protocol}
+
+\texttt{generals.io} utilise une websocket pour communiquer entre le client et
+le serveur et plus spécifiquement la bibliothèque javascript
+\texttt{http://socket.io/}\footnote{Vous pouvez aller lire un peu
+\url{https://github.com/socketio/socket.io-protocol} et
+\url{https://github.com/socketio/engine.io-protocol} pour comprendre en gros
+comment ça fonctionne.}.
+
+\begin{exo}{}
+Le but ici est d'écrire une bibliothèque permettant d'intéragir avec le serveur
+generals.io. Vous devez notamment implémenter la connexion à une partie 1v1, le
+déplacement de soldats avec en bonus l'envoi de messages dans le chat, la
+récupération de l'historique des matchs et des classements des joueurs.
+
+Pour cela, vous pouvez utiliser la bibliothèque python
+\texttt{websocket}\footnote{\url{https://websockets.readthedocs.io/en/stable/}}.
+Celle-ci utilise le nouveau module de la bibliothèque standard \texttt{asyncio}
+\footnote{\url{https://docs.python.org/3/library/asyncio.html#module-asyncio}},
+vous êtes encouragés à vous documenter sur son fonctionnement et à l'utiliser
+vous-même dans votre client en structurant le code autour de callback.
+\end{exo}
+
+\begin{solution}
+Beaucoup de solutions sont possibles, un exemple:
+\url{https://github.com/Lapin0t/generalsio/blob/master/generals/client.py}.
+\end{solution}
+
+
+\section{Le bot}
+
+Maintenant qu'on peut intéragir avec le serveur il est temps de commencer à
+écrire un bot. Commencez par des comportements naïfs puis essayer de formaliser
+la stratégie que vous appliquez lorsque vous jouez vous-même.
+
+Quelques pistes: essayer d'étendre ses frontières sensibles lorsque le numéro
+du tour approche 0 modulo 25, foncer dans le camp ennemi avec un gros groupe de
+soldats en se dirigeant sur les cases comportants le moins de soldats\dots
+
+
+%% Question pour améliorer les fiches en fonction des retours des
+%% étudiants 
+
+\input{questionsub.tex}
+
+\input{conclusion.tex}
+
+\end{document} 
